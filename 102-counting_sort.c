@@ -1,59 +1,52 @@
 #include "sort.h"
-#include <stdlib.h>
-
 /**
- * arr_max - array max
+ * counting_sort -Sorts an arrayof integers
+ * in ascending order using the
+ * Counting sort algorithm
  * @array: array
- * @size: size of the array
- * Return: max
- */
-int arr_max(int *array, size_t size)
-{
-	int max;
-	size_t i;
-
-	max = array[0];
-	for (i = 1; i < size; i++)
-		if (array[i] > max)
-			max = array[i];
-	return (max);
-}
-
-/**
- * counting_sort - sorts an array with the Counting sort algorithm
- * @array: array to sort
- * @size: size of the array
+ * @size: size
+ * Return: no return
  */
 void counting_sort(int *array, size_t size)
 {
-	int *arr, *o_arr, max, num;
-	size_t i;
+	int n, i;
+	int *buff, *a;
 
-	if (size < 2 || !array)
+	if (size < 2)
 		return;
-	max = arr_max(array, size);
 
-	arr = malloc(sizeof(size_t) * (max + 1));
-	o_arr = malloc(sizeof(int) * size);
+	for (n = i = 0; i < (int)size; i++)
+		if (array[i] > n)
+			n = array[i];
 
-	for (i = 0; (int)i <= max; i++)
-		arr[i] = 0;
-	for (i = 0; i < size; i++)
+	buff = malloc(sizeof(int) * (n + 1));
+	if (!buff)
+		return;
+
+	for (i = 0; i <= n; i++)
+		buff[i] = 0;
+	for (i = 0; i < (int)size; i++)
+		buff[array[i]] += 1;
+	for (i = 1; i <= n; i++)
+		buff[i] += buff[i - 1];
+
+	print_array(buff, (n + 1));
+	a = malloc(sizeof(int) * (size + 1));
+
+	if (!a)
 	{
-		num = array[i];
-		arr[num] += 1;
+		free(buff);
+		return;
 	}
-	for (i = 1; (int)i <= max; i++)
-		arr[i] += arr[i - 1];
-	print_array(arr, max + 1);
-	for (i = 0; i < size; i++)
+	for (i = 0; i < (int)size; i++)
 	{
-		o_arr[arr[array[i]] - 1] = array[i];
-		arr[array[i]]--;
+		a[buff[array[i]] - 1] = array[i];
+		buff[array[i]] -= 1;
 	}
-	for (i = 0; i < size; i++)
-		array[i] = o_arr[i];
 
-	free(o_arr);
-	free(arr);
+	for (i = 0; i < (int)size; i++)
+		array[i] = a[i];
+
+	free(buff);
+	free(a);
 }

@@ -1,31 +1,32 @@
 #include "sort.h"
 
 /**
- * selection_sort - sort list with selection_sort
- * @array: The array to be printed
- * @size: Number of elements in @array
+ * selection_sort - sorts an array of integers in
+ * ascending order
+ * @array: input array of integers
+ * @size: size of the array
+ * Return: no return
  */
 void selection_sort(int *array, size_t size)
 {
-	size_t i, c, less, tmp, swap;
+	int tmp;
+	size_t i, j, m;
 
-	if (array == NULL)
-		return;
 	for (i = 0; i < size; i++)
 	{
-		for (less = i, c = i; c < size; c++)
-			if (array[c] < array[less])
-			{
-				less = c;
-				swap = 1;
-			}
-		if (swap == 1)
+		m = i;
+		for (j = i + 1; j < size; j++)
 		{
-			tmp = array[less];
-			array[less] = array[i];
-			array[i] = tmp;
+			if (array[m] > array[j])
+				m = j;
+		}
+
+		if (i != m)
+		{
+			tmp = array[i];
+			array[i] = array[m];
+			array[m] = tmp;
 			print_array(array, size);
-			swap = 0;
 		}
 	}
 }
